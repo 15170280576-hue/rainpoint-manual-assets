@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>RAINPOINT AI说明书生成器</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Microsoft YaHei",
+        Arial,
+        sans-serif;
+      background: #f5f7fa;
+      color: #1f2329;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 780px;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 38px 42px;
+      box-shadow: 0 8px 32px rgba(31, 35, 41, 0.10);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #4e5969;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      color: #1f2329;
+    }
+
+    .subtitle {
+      color: #646a73;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .process {
+      margin-top: 18px;
+      color: #86909c;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .notice {
+      background: #f2f6ff;
+      border: 1px solid #dce8ff;
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 24px;
+      line-height: 1.8;
+    }
+
+    .notice-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #1f2329;
+    }
+
+    .check-list {
+      margin: 0;
+      padding-left: 22px;
+      line-height: 2;
+      color: #4e5969;
+    }
+
+    .qa {
+      margin-top: 24px;
+      border-top: 1px solid #e5e6eb;
+      padding-top: 20px;
+    }
+
+    .qa-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .qa-row {
+      margin: 10px 0;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #4e5969;
+    }
+
+    .qa-status {
+      display: inline-block;
+      min-width: 170px;
+      font-weight: 700;
+      color: #1f2329;
+    }
+
+    .sop-details {
+      margin-top: 22px;
+      border: 1px solid #e5e6eb;
+      border-radius: 10px;
+      padding: 0 18px;
+      background: #ffffff;
+    }
+
+    summary {
+      cursor: pointer;
+      padding: 16px 0;
+      font-weight: 600;
+      color: #1f2329;
+    }
+
+    .sop-content {
+      padding-bottom: 20px;
+      color: #4e5969;
+      line-height: 1.9;
+      font-size: 14px;
+    }
+
+    .sop-section {
+      margin-top: 20px;
+    }
+
+    .sop-section-title {
+      font-weight: 700;
+      color: #1f2329;
+      margin-bottom: 6px;
+    }
+
+    .agree {
+      margin-top: 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.7;
+      color: #4e5969;
+      font-size: 14px;
+    }
+
+    .agree input {
+      margin-top: 4px;
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      cursor: pointer;
+    }
+
+    .button {
+      width: 100%;
+      margin-top: 22px;
+      border: 0;
+      border-radius: 10px;
+      padding: 15px 20px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #1456f0;
+      color: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .button:hover:not(:disabled) {
+      background: #0f4cd8;
+    }
+
+    .button:disabled {
+      background: #c9cdd4;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      text-align: center;
+      color: #8f959e;
+      font-size: 12px;
+      margin-top: 25px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 16px 10px;
+        align-items: flex-start;
+      }
+
+      .card {
+        padding: 28px 20px;
+        border-radius: 14px;
+      }
+
+      .title {
+        font-size: 23px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+
+      .qa-status {
+        display: block;
+        min-width: 0;
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="card">
+
+      <div class="header">
+
+        <div class="brand">
+          RAINPOINT
+        </div>
+
+        <h1 class="title">
+          AI说明书生成器
+        </h1>
+
+        <div class="subtitle">
+          自动完成产品信息提取、五语说明书生成、内容一致性QA及Word文档输出
+        </div>
+
+        <div class="process">
+          产品资料 → 产品事实提取 → 英文说明书 → 多语言生成 → 五语QA → Word输出
+        </div>
+
+      </div>
+
+
+      <div class="notice">
+
+        <div class="notice-title">
+          使用前请确认
+        </div>
+
+        <ul class="check-list">
+
+          <li>
+            产品原始资料应为当前产品型号的最新、已确认版本。
+          </li>
+
+          <li>
+            参考说明书仅用于章节结构、专业术语及表达方式参考，不作为当前产品事实来源。
+          </li>
+
+          <li>
+            产品参数、功能、操作逻辑等事实应以当前产品原始资料为准。
+          </li>
+
+          <li>
+            AI生成结果属于说明书初稿及QA辅助结果，不能直接作为印刷定稿。
+          </li>
+
+          <li>
+            正式使用前必须人工核对产品参数、操作逻辑、多语言内容及Word排版。
+          </li>
+
+          <li>
+            如QA结果为 PASS WITH WARNINGS 或 FAIL，必须完成人工复核或修正。
+          </li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="qa">
+
+        <div class="qa-title">
+          QA结果说明
+        </div>
+
+        <div class="qa-row">
+
+          <span class="qa-status">
+            PASS
+          </span>
+
+          未发现需要人工处理的明显问题，可进入人工常规校对流程。
+
+        </div>
+
+
+        <div class="qa-row">
+
+          <span class="qa-status">
+            PASS WITH WARNINGS
+          </span>
+
+          内容整体可用，但存在需要人工确认的警告项，必须完成复核后再进入正式流程。
+
+        </div>
+
+
+        <div class="qa-row">
+
+          <span class="qa-status">
+            FAIL - HUMAN CORRECTION REQUIRED
+          </span>
+
+          存在重大缺失、冲突或无法确认的信息，不可直接进入正式说明书流程。
+
+        </div>
+
+      </div>
+
+
+      <details class="sop-details">
+
+        <summary>
+          查看完整使用SOP
+        </summary>
+
+        <div class="sop-content">
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              一、标准操作流程
+            </div>
+
+            1. 输入产品型号。<br>
+            2. 输入产品类型。<br>
+            3. 选择销售市场。<br>
+            4. 上传当前产品原始资料。<br>
+            5. 上传结构、功能或操作方式相似的参考说明书。<br>
+            6. 如有特殊要求，在“本次特殊要求”中填写。<br>
+            7. 点击“运行”。<br>
+            8. 等待系统完成产品事实提取、英文生成、多语言生成及QA检查。<br>
+            9. 查看 qa_status 与 quality_check。<br>
+            10. 下载五语 Word 文件。<br>
+            11. 人工核对产品事实、多语言内容及Word排版。<br>
+            12. 确认无误后进入正式包材流程。
+
+          </div>
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              二、产品原始资料要求
+            </div>
+
+            产品原始资料应优先包含：<br>
+
+            产品规格参数、产品功能、操作逻辑、按键或旋钮功能、安装方式、包装清单、警告信息、保修信息及其他已经确认的技术资料。<br><br>
+
+            上传前请确认：<br>
+
+            · 产品型号正确。<br>
+            · 资料为当前最新版。<br>
+            · 未误上传其他型号资料。<br>
+            · 关键参数和功能已经过确认。
+
+          </div>
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              三、参考说明书使用原则
+            </div>
+
+            参考说明书主要用于：<br>
+
+            · 章节结构参考。<br>
+            · 内容组织方式参考。<br>
+            · 专业术语参考。<br>
+            · 操作表达方式参考。<br><br>
+
+            参考说明书不能直接作为当前产品参数、功能和操作事实的依据。<br><br>
+
+            如参考说明书与当前产品原始资料存在冲突，应以当前产品原始资料为准。
+
+          </div>
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              四、本次特殊要求
+            </div>
+
+            如当前任务存在额外要求，可在“本次特殊要求”中填写。<br><br>
+
+            建议一条要求填写一行。<br><br>
+
+            示例：<br>
+
+            美国市场优先。<br>
+            电话格式保留连字符。<br>
+            删除所有“See page xx”。<br>
+            Waterproof Rating 保持 IPX5。<br>
+            不要出现 Bluetooth。<br>
+            图片位置使用 XXXX 表示。<br>
+            规格表数值不得自行修改。
+
+          </div>
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              五、最终结果
+            </div>
+
+            系统运行完成后主要查看：<br><br>
+
+            qa_status：QA最终状态。<br>
+
+            quality_check：中文质量检查说明。<br>
+
+            manual_word_file：最终五语Word说明书文件。<br><br>
+
+            Word文件名示例：<br>
+
+            ITV163_5-Language_User_Manual.docx
+
+          </div>
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              六、人工审核重点
+            </div>
+
+            生成完成后必须人工检查：<br><br>
+
+            · 产品型号。<br>
+            · 产品规格参数。<br>
+            · 工作温度及工作压力。<br>
+            · 电池规格。<br>
+            · 防水等级。<br>
+            · 接口规格。<br>
+            · 产品功能逻辑。<br>
+            · 安装及操作步骤。<br>
+            · 包装清单。<br>
+            · 保修信息。<br>
+            · 五国语言数字及单位一致性。<br>
+            · 多语言是否存在漏译、错译或串语。<br>
+            · Word标题、表格、分页、页眉、页脚及页码。
+
+          </div>
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              七、RAINPOINT固定售后信息
+            </div>
+
+            Website：us.rainpoint.com<br>
+
+            Email：service@rainpoint.com<br>
+
+            US Hotline：+1 833-381-5659<br>
+
+            DE Hotline：+49 800-182-0576<br>
+
+            UK Hotline：+44 20-4628-3036
+
+          </div>
+
+
+          <div class="sop-section">
+
+            <div class="sop-section-title">
+              八、重要注意事项
+            </div>
+
+            · AI生成内容不能直接作为印刷定稿。<br>
+
+            · 不要上传错误型号或过期资料。<br>
+
+            · 不要把参考说明书作为当前产品事实来源。<br>
+
+            · 不确定的信息不要作为事实写入“本次特殊要求”。<br>
+
+            · 出现重大警告或FAIL时必须人工确认。<br>
+
+            · 产品资料更新后建议重新运行完整流程。<br>
+
+            · 正式进入包材流程前必须完成最终人工审核。
+
+          </div>
+
+
+        </div>
+
+      </details>
+
+
+      <label class="agree">
+
+        <input
+          type="checkbox"
+          id="agreeBox"
+          onchange="toggleButton()"
+        >
+
+        <span>
+          我已阅读并理解上述使用说明，确认AI生成内容需经过人工审核后方可进入正式包材流程。
+        </span>
+
+      </label>
+
+
+      <button
+        class="button"
+        id="enterButton"
+        disabled
+        onclick="enterGenerator()"
+      >
+        我已阅读，进入AI说明书生成器
+      </button>
+
+
+      <div class="footer">
+        RAINPOINT Internal AI Tool<br>
+        AI辅助生成 · 人工审核确认
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    const DIFY_URL =
+      "https://udify.app/workflow/ucEQeKGrmgtgVdW2";
+
+
+    function toggleButton() {
+
+      const checkbox =
+        document.getElementById("agreeBox");
+
+      const button =
+        document.getElementById("enterButton");
+
+      button.disabled =
+        !checkbox.checked;
+    }
+
+
+    function enterGenerator() {
+
+      window.location.href =
+        DIFY_URL;
+    }
+
+  </script>
+
+</body>
+</html>
